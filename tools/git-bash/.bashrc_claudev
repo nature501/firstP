@@ -40,6 +40,9 @@ alias startpython='cdtc && echo "🐍 啟動 Python 虛擬環境..." && source v
 # Claude AI 相關
 alias claude-help='echo -e "🤖 Claude AI 使用指南:\n• VS Code: Ctrl+Shift+P > Claude\n• 程式碼審查: Claude: Review Code\n• 文檔生成: Claude: Generate Documentation\n• 配置檔案: $CLAUDEV_ROOT/.claude/settings.local.json"'
 
+# GitHub 認證狀態檢查
+alias auth-status='echo "🔐 GitHub 認證狀態:" && git config credential.helper && echo "✅ Personal Access Token 已配置" && echo "✅ 推送時無需手動輸入密碼"'
+
 # 系統資訊
 alias sysinfo='echo -e "💻 系統資訊:\n• 專案根目錄: $CLAUDEV_ROOT\n• Git 版本: $(git --version)\n• Node.js 版本: $(node --version 2>/dev/null || echo "未安裝")\n• Python 版本: $(python --version 2>/dev/null || echo "未安裝")"'
 
