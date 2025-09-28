@@ -8,7 +8,12 @@
       "Bash(while read file)",
       "Bash(done)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Reorganize project structure for better development workflow\n\nRestructured D:/claudeV/ directory with clear project organization:\n\n📁 Structure Changes:\n- Created projects/ directory for main development projects\n- Created tools/ directory for development tool configurations\n- Organized naturetour-website with proper categorization\n- Consolidated travel-content-generator and wulitou-writer\n\n📋 Project Organization:\n- naturetour-website/: WordPress + Elementor travel agency website\n  - docs/: Development documentation\n  - content/: Content structure planning\n  - branding/: Brand guidelines and color schemes\n  - marketing/: Marketing templates and prompts\n- travel-content-generator/: Python-based travel content tools\n- wulitou-writer/: Creative writing assistant tool\n\n🛠️ Tools Configuration:\n- vscode-config/: VS Code settings and Claude integration\n- git-bash/: Git Bash configurations\n\n🧹 Cleanup:\n- Removed duplicate files and directories\n- Eliminated unused legacy structure\n- Cleaned up git repository conflicts\n\n🎯 Benefits:\n- Clear separation of projects and tools\n- Better VS Code and Git Bash integration\n- Improved Claude AI development workflow\n- Simplified navigation and file management\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Read(//d/claudeV/**)"
     ],
     "deny": [],
     "ask": []

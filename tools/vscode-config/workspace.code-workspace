@@ -1,0 +1,83 @@
+{
+  "folders": [
+    {
+      "name": "🌐 naturetour-website",
+      "path": "../../projects/naturetour-website"
+    },
+    {
+      "name": "📝 travel-content-generator",
+      "path": "../../projects/travel-content-generator"
+    },
+    {
+      "name": "✍️ wulitou-writer",
+      "path": "../../projects/wulitou-writer"
+    },
+    {
+      "name": "🛠️ tools",
+      "path": "../../tools"
+    }
+  ],
+  "settings": {
+    "claude.autoComplete": true,
+    "claude.diagnostics": true,
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "git.enableSmartCommit": true,
+    "explorer.sortOrder": "type",
+    "workbench.colorTheme": "Default Dark+",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.profiles.windows": {
+      "Git Bash": {
+        "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+        "args": ["--login", "-i"],
+        "env": {
+          "CHERE_INVOKING": "1"
+        }
+      }
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "claude-ai.claude-code",
+      "eamodio.gitlens",
+      "ms-python.python",
+      "bradlc.vscode-tailwindcss",
+      "formulahendry.auto-rename-tag",
+      "ms-vscode.vscode-json",
+      "yzhang.markdown-all-in-one"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "🌐 Start naturetour dev",
+        "type": "shell",
+        "command": "npm run dev",
+        "group": "build",
+        "options": {
+          "cwd": "${workspaceFolder:🌐 naturetour-website}"
+        }
+      },
+      {
+        "label": "📝 Run travel generator demo",
+        "type": "shell",
+        "command": "python src/generators/demo_usage.py",
+        "group": "build",
+        "options": {
+          "cwd": "${workspaceFolder:📝 travel-content-generator}"
+        }
+      },
+      {
+        "label": "✍️ Run wulitou writer",
+        "type": "shell",
+        "command": "node src/wulitou_writer.js",
+        "group": "build",
+        "options": {
+          "cwd": "${workspaceFolder:✍️ wulitou-writer}"
+        }
+      }
+    ]
+  }
+}
