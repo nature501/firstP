@@ -1,0 +1,43 @@
+{
+  "name": "naturetour-website-upgrade",
+  "version": "1.0.0",
+  "description": "自然國際旅行社官網升級專案 - WordPress + Elementor解決方案",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp watch",
+    "build": "gulp build",
+    "start": "gulp default",
+    "deploy": "gulp deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natur501/naturetour-website-upgrade.git"
+  },
+  "keywords": [
+    "wordpress",
+    "elementor",
+    "travel-agency",
+    "website-upgrade",
+    "responsive-design"
+  ],
+  "author": {
+    "name": "natur501",
+    "email": "nature.tour@msa.hinet.net"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-watch": "^5.0.1",
+    "browser-sync": "^2.27.10"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

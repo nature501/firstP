@@ -1,0 +1,209 @@
+#!/usr/bin/env node
+
+const fs = require('fs').promises;
+const path = require('path');
+
+class WulitouWriter {
+    constructor() {
+        this.projectRoot = __dirname + '/..';
+        this.characterProfile = null;
+        this.styleGuide = null;
+        this.loadConfigurations();
+    }
+
+    async loadConfigurations() {
+        try {
+            // 載入角色設定
+            const characterData = await fs.readFile(
+                path.join(this.projectRoot, 'config/character_profile.json'),
+                'utf8'
+            );
+            this.characterProfile = JSON.parse(characterData);
+
+            // 載入寫作風格指南
+            this.styleGuide = await fs.readFile(
+                path.join(this.projectRoot, 'config/writing_style_guide.md'),
+                'utf8'
+            );
+        } catch (error) {
+            console.error('載入配置文件時發生錯誤:', error.message);
+        }
+    }
+
+    generatePrompt(inputData) {
+        const character = this.characterProfile.character;
+        const { 主題, 文字量, 年齡限制, 文章類型, 語調風格, 摘要備註, 特殊要求 } = inputData.writing_request;
+
+        const prompt = `
+你現在是"無俚頭"，一位生於1968年的台灣資深寫手。
+
+## 你的背景特色：
+- 出生年份：1968年，現年56歲
+- 經歷了台灣從威權時代到民主化，從農業社會到資訊時代的完整轉變
+- 寫作風格：${語調風格}、幽默輕鬆、知識性但不說教
+- 擅長領域：${character.knowledge_domains.join('、')}
+
+## 你的人生經歷重點：
+### 童年時期 (1970年代)：
+- 政治環境：戒嚴時期、威權統治
+- 生活方式：大家庭制度、三合院、黑白電視、手寫信件
+- 交通工具：腳踏車、公車為主
+- 娛樂：布袋戲、歌仔戲、漫畫書
+
+### 青年時期 (1980年代)：
+- 政治環境：解嚴前夕、民主化萌芽
+- 科技發展：彩色電視、卡帶錄音機、早期電腦
+- 文化：KTV興起、流行音樂黃金時代
+
+### 成年時期 (1990-2000年代)：
+- 政治：民主化完成、政黨輪替
+- 科技：個人電腦、手機、網際網路普及
+- 社會：經濟起飛、消費主義、少子化
+
+### 現在 (2020年代)：
+- 科技：AI時代、智慧型手機、社群媒體
+- 社會：數位化生活、遠距工作、永續意識
+
+## 寫作任務：
+主題：${主題}
+文字量：${文字量.選擇}
+年齡限制：${年齡限制.選擇}
+文章類型：${文章類型.選擇}
+語調風格：${語調風格}
+摘要備註：${摘要備註}
+特殊要求：${特殊要求}
+
+## 寫作要求：
+1. 以第一人稱"我"來寫作，體現無俚頭的個人經歷和觀點
+2. 善用"想當年vs現在"的對比手法
+3. 在輕鬆幽默中融入知識性內容
+4. 使用台灣本土的語言表達和文化內容
+5. 文章結構要有吸睛開場、故事展開、深度思考、幽默收尾
+6. 適度使用無俚頭的招牌語句：${character.signature_phrases.join('、')}
+
+## 內容限制：
+- 年齡限制：${年齡限制.選擇} ${年齡限制.特殊說明 ? '(' + 年齡限制.特殊說明 + ')' : ''}
+- 避免過度政治化或爭議性內容
+- 保持正面積極的價值觀
+- 尊重不同世代和文化
+
+請根據以上設定，寫出一篇符合要求的文章。文章要體現無俚頭豐富的人生閱歷，以及對台灣社會變遷的深度觀察。
+`;
+
+        return prompt;
+    }
+
+    async createWritingTemplate(inputData) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const fileName = `writing_request_${timestamp}.json`;
+        const filePath = path.join(this.projectRoot, 'templates', fileName);
+
+        // 添加時間戳記
+        inputData.metadata.創建時間 = new Date().toLocaleString('zh-TW');
+
+        await fs.writeFile(filePath, JSON.stringify(inputData, null, 2), 'utf8');
+        return { fileName, filePath };
+    }
+
+    async generateArticle(inputData) {
+        const prompt = this.generatePrompt(inputData);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+        // 保存生成提示
+        const promptFileName = `prompt_${timestamp}.txt`;
+        const promptPath = path.join(this.projectRoot, 'output', promptFileName);
+        await fs.writeFile(promptPath, prompt, 'utf8');
+
+        // 創建輸出文件模板
+        const outputTemplate = {
+            metadata: {
+                主題: inputData.writing_request.主題,
+                創建時間: new Date().toLocaleString('zh-TW'),
+                作者: '無俚頭',
+                文字量: inputData.writing_request.文字量.選擇,
+                年齡限制: inputData.writing_request.年齡限制.選擇,
+                文章類型: inputData.writing_request.文章類型.選擇,
+                語調風格: inputData.writing_request.語調風格
+            },
+            prompt: prompt,
+            generated_article: "請將此提示複製到AI助手(如Claude、ChatGPT)中生成文章，然後將結果貼回這裡",
+            notes: inputData.writing_request.摘要備註
+        };
+
+        const outputFileName = `article_${timestamp}.json`;
+        const outputPath = path.join(this.projectRoot, 'output', outputFileName);
+        await fs.writeFile(outputPath, JSON.stringify(outputTemplate, null, 2), 'utf8');
+
+        return {
+            promptPath,
+            outputPath,
+            prompt
+        };
+    }
+
+    async createUserInterface() {
+        const template = await fs.readFile(
+            path.join(this.projectRoot, 'templates/input_template.json'),
+            'utf8'
+        );
+
+        const userInterfaceFile = path.join(this.projectRoot, 'user_input.json');
+        await fs.writeFile(userInterfaceFile, template, 'utf8');
+
+        console.log(`\n📝 無俚頭寫手系統已就緒！\n`);
+        console.log(`請編輯以下文件來輸入您的寫作需求：`);
+        console.log(`文件路徑: ${userInterfaceFile}\n`);
+        console.log(`編輯完成後，運行以下命令生成文章：`);
+        console.log(`node src/wulitou_writer.js generate\n`);
+
+        return userInterfaceFile;
+    }
+}
+
+// 主程式邏輯
+async function main() {
+    const writer = new WulitouWriter();
+    const command = process.argv[2];
+
+    if (command === 'generate') {
+        try {
+            const userInputPath = path.join(writer.projectRoot, 'user_input.json');
+            const inputData = JSON.parse(await fs.readFile(userInputPath, 'utf8'));
+
+            // 驗證必要欄位
+            if (!inputData.writing_request.主題) {
+                console.error('❌ 錯誤：請填入主題');
+                return;
+            }
+            if (!inputData.writing_request.文字量.選擇) {
+                console.error('❌ 錯誤：請選擇文字量');
+                return;
+            }
+            if (!inputData.writing_request.文章類型.選擇) {
+                console.error('❌ 錯誤：請選擇文章類型');
+                return;
+            }
+
+            const result = await writer.generateArticle(inputData);
+
+            console.log('\n✅ 文章生成提示已創建！');
+            console.log(`\n📋 提示文件: ${result.promptPath}`);
+            console.log(`📄 輸出模板: ${result.outputPath}`);
+            console.log(`\n🤖 請複製以下提示到AI助手中生成文章：\n`);
+            console.log('='.repeat(80));
+            console.log(result.prompt);
+            console.log('='.repeat(80));
+
+        } catch (error) {
+            console.error('❌ 生成文章時發生錯誤:', error.message);
+        }
+    } else {
+        await writer.createUserInterface();
+    }
+}
+
+if (require.main === module) {
+    main().catch(console.error);
+}
+
+module.exports = WulitouWriter;

@@ -1,0 +1,30 @@
+{
+  "name": "wulitou-writer",
+  "version": "1.0.0",
+  "description": "無俚頭 - 專業台灣本土寫作高手生成系統",
+  "main": "src/wulitou_writer.js",
+  "scripts": {
+    "start": "node src/wulitou_writer.js",
+    "generate": "node src/wulitou_writer.js generate",
+    "init": "node src/wulitou_writer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "寫作",
+    "台灣",
+    "文學創作",
+    "AI輔助寫作",
+    "無俚頭"
+  ],
+  "author": "無俚頭寫手系統",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/wulitou-writer.git"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
